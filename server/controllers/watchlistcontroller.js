@@ -13,7 +13,7 @@ router.get('/test', (req, res) => {
 
 //POST - Create a watchlist item for an individual user
 
-router.post('/create', /*validateJWT,*/ async (req, res) => {
+router.post('/create', validateJWT, async (req, res) => {
     const { title, rated, runtime, genre, plot, poster, watched, recommend } = req.body.watchlist;
     const { id } = req.user;
     const watchlistEntry = {
