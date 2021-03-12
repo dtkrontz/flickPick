@@ -8,20 +8,20 @@ const { UniqueConstraintError } = require('sequelize/lib/errors');
 
 //register
 router.post('/register', async (req, res) => {
-    let {username, password}= req.body;
+    let {username, password}= req.body.user;
     try{
-        const newUser = await UserModel.create({
+        const User = await UserModel.create({
             username,
             password: bcrypt.hashSync(password,13)
         })
         const token = jwt.sign({
-            id:newUser.id
+            id:User.id
         },
         process.env.JWT_SECRET,
         {expiresIn : 60*60*24});
         res.status(201).json({
             Message:'User was registered!',
-            user: newUser,
+            user: User,
             token
         })
     } catch (error) {
@@ -30,6 +30,7 @@ router.post('/register', async (req, res) => {
                 message:'Do you have a doppelganger? This username is already in use!'
             })
         }else{
+            console.log(error)
             res.status(500).json({
                 error: "Failed to register user"
             })
@@ -39,7 +40,7 @@ router.post('/register', async (req, res) => {
 
 //login
 router.post('/login', async(req, res) => {
-    const {username, password} = req.body;
+    const {username, password} = req.body.user;
     try{
        let loginUser = await UserModel.findOne({
            where:{
