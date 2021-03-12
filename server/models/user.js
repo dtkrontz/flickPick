@@ -3,15 +3,19 @@ const db = require("../db");
 
 
 const User = db.define("user", {
-    email: {
+    username: {
         type: DataTypes.STRING(100),
         allowNull: false,
         unique: true
     },
     password: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(),
         allowNull: false
+
     }
+
+
+
 });
 
 module.exports= User;
