@@ -1,8 +1,11 @@
 const Express = require('express');
-const {WatchlistModel} = require('../models');
+const router = Express.Router();
 const validateJWT = require('../middleware/validate-jwt');
 
-const router = Express.Router();
+const {WatchlistModel} = require('../models');
+
+
+//Test route
 
 router.get('/test', (req, res) => {
     res.send('Hey! This is a test route!')
@@ -10,23 +13,41 @@ router.get('/test', (req, res) => {
 
 //POST - Create a watchlist item for an individual user
 
-router.post('/', validateJWT, async (req, res) => {
-    'variables'
+router.post('/create', /*validateJWT,*/ async (req, res) => {
+    const { title, rated, runtime, genre, plot, poster, watched, recommend } = req.body.watchlist;
+    const { id } = req.user;
+    const watchlistEntry = {
+        title,
+        rated,
+        runtime,
+        genre,
+        plot,
+        poster,
+        watched,
+        recommend,
+        owner: id
+    }
     try {
-
+        const newItem = await WatchlistModel.create(watchlistEntry);
+        res.status(200).json(watchlistEntry);
     } catch (err) {
-        console.log(err);
+        res.status(500).json({ error: err });
     }
 });
 
 //GET - pull all logs for an individual user
 
-router.get('/', validateJWT, async (req, res) => {
-    'variables'
+router.get('/view', validateJWT, async (req, res) => {
+    let { id } = req.user;
     try {
-
+        const userList = await WatchlistModel.findAll({
+            where: {
+                owner: id
+            }
+        });
+        res.status(200).json(userList)
     } catch (err) {
-        console.log(err);
+        res.status(500).json({ error: err });
     }
 });
 
@@ -38,7 +59,7 @@ router.put('/', validateJWT, async (req, res) => {
     
     try {
         const watchlistUpdated = WatchlistModel.update(
-            {title, rated, runtime, genre, plot, poster, watched, recommened},
+            {title, rated, runtime, genre, plot, poster, watched, recommend},
             {where: {id: req.params.id}}
         )
         res.status(200).json({
