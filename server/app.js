@@ -2,11 +2,11 @@ require('dotenv').config();
 
 const Express = require('express');
 const app = Express();
-const dbConnection = require('./db');
+const dbConnection = require('./db.js');
 const middleware = require('./middleware');
 
-
 app.use(middleware.CORS);
+
 app.use(Express.json());
 
 const controllers = require("./controllers");
