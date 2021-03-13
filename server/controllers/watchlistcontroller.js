@@ -13,8 +13,8 @@ router.get('/test', (req, res) => {
 
 //POST - Create a watchlist item for an individual user
 
-router.post('/create', /*validateJWT,*/ async (req, res) => {
-    const { title, rated, runtime, genre, plot, poster, watched, recommend } = req.body.watchlist;
+router.post('/create', validateJWT, async (req, res) => {
+    const { title, rated, runtime, genre, plot, poster, watched, recommend, } = req.body.watchlist;
     const { id } = req.user;
     const watchlistEntry = {
         title,
@@ -107,7 +107,7 @@ router.delete('/:id', validateJWT, async (req, res) => {
 
         await WatchlistModel.destroy(deleteWatchlist)
         res.status(200).json({
-            message: 'Watchlist item successfully deleted'
+            message: 'Watchlist item successfully destroyed'
         })
     } catch (err) {
         console.log(err);
