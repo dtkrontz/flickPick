@@ -14,7 +14,7 @@ router.get('/test', (req, res) => {
 //POST - Create a watchlist item for an individual user
 
 router.post('/create', validateJWT, async (req, res) => {
-    const { title, rated, runtime, genre, plot, poster, watched, recommend, } = req.body.watchlist;
+    const { title, rated, runtime, genre, plot, poster, watched, recommend } = req.body.watchlist;
     const { id } = req.user;
     const watchlistEntry = {
         title,
@@ -54,7 +54,7 @@ router.get('/view', validateJWT, async (req, res) => {
 //PUT - Edit watchlist item to mark it as "watched" or "unwatched"
 
 router.put('/:id', validateJWT, async (req, res) => {
-    
+   
     const {title, rated, runtime, genre, plot, poster, watched, recommend} = req.body.watchlist;
     const watchlistId = req.params.id;
     const userId = req.user.id;
