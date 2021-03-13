@@ -54,14 +54,31 @@ router.get('/view', validateJWT, async (req, res) => {
 //PUT - Edit watchlist item to mark it as "watched" or "unwatched"
 
 router.put('/:id', validateJWT, async (req, res) => {
-    
-    const {title, rated, runtime, genre, plot, poster, watched, recommend} = req.body;
+   
+    const {title, rated, runtime, genre, plot, poster, watched, recommend} = req.body.watchlist;
+    const watchlistId = req.params.id;
+    const userId = req.user.id;
+
+    const watchlistSearch = {
+        where: {
+            id: watchlistId,
+            owner: userId
+        }
+    };
+
+    const updatedWatchlist = {
+        title: title,
+        rated: rated,
+        runtime: runtime,
+        genre: genre,
+        plot: plot,
+        poster: poster,
+        watched: watched,
+        recommend: recommend
+    }
     
     try {
-        const watchlistUpdated = WatchlistModel.update(
-            {title, rated, runtime, genre, plot, poster, watched, recommend},
-            {where: {id: req.params.id}}
-        )
+        const watchlistUpdated = WatchlistModel.update(updatedWatchlist, watchlistSearch);
         res.status(200).json({
             message: 'Watchlist successfully updated'
         })
@@ -90,7 +107,7 @@ router.delete('/:id', validateJWT, async (req, res) => {
 
         await WatchlistModel.destroy(deleteWatchlist)
         res.status(200).json({
-            message: 'Watchlist item successfully deleted'
+            message: 'Watchlist item successfully destroyed'
         })
     } catch (err) {
         console.log(err);
