@@ -39,6 +39,6 @@ const Watchlist = db.define('watchlist', {
     owner: {
         type: DataTypes.INTEGER
     }
-})
+});
 
 module.exports = Watchlist;

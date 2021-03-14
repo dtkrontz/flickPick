@@ -5,7 +5,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require ('jsonwebtoken');
 const { UniqueConstraintError } = require('sequelize/lib/errors');
 
-
 //register
 router.post('/register', async (req, res) => {
     let {username, password}= req.body.user;
@@ -47,12 +46,9 @@ router.post('/login', async(req, res) => {
                username
            }
        });
-
        if(loginUser) {
            let passwordComparison = await bcrypt.compare(password,loginUser.password);
-
            if(passwordComparison){
-
                let token = jwt.sign(
                    {
                        id: loginUser.id
@@ -62,7 +58,6 @@ router.post('/login', async(req, res) => {
                        expiresIn:60*60*24
                    }
                );
-
                res.status(200).json({
                    user: loginUser,
                    message:"User successfully logged in!",
@@ -78,13 +73,11 @@ router.post('/login', async(req, res) => {
                message:"Incorrect email or password"
            })
        }
-
     }catch(err){
+        console.log(err);
         res.status(500).json({
             message:"Error logging in!"
         });
-
     }
 })
-
 module.exports = router;
