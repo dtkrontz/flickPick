@@ -30,11 +30,11 @@ const Watchlist = db.define('watchlist', {
     },
     watched: {
         type: DataTypes.BOOLEAN,
-        allowNull: true
+        allowNull: false
     },
     recommend: {
         type: DataTypes.BOOLEAN,
-        allowNull: true
+        allowNull: false
     },
     owner: {
         type: DataTypes.INTEGER
